@@ -11,7 +11,7 @@ services:
         links:
             - server
         networks:
-            webappnetwork
+            - webappnetwork
     server:
         image: webapp-server
         restart: always
@@ -23,7 +23,7 @@ services:
         depends_on:
             - mongodb
         networks:
-            webappnetwork
+            - webappnetwork
     mongodb:
         image: mongo
         restart: always
