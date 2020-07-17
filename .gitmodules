@@ -1,0 +1,6 @@
+[submodule "millamoolah_server"]
+	path = millamoolah_server
+	url = https://github.com/millasml/millamoolah_server.git
+[submodule "millamoolah_client"]
+	path = millamoolah_client
+	url = https://github.com/millasml/millamoolah_client
