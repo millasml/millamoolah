@@ -2,7 +2,12 @@ version: "2"
 services:
     client:
         image: webapp-client
-        restart: always
+        build: 
+            context: ./millamoolah_client
+            dockerfile: Dockerfile
+        stdin_open: true
+        tty: true      
+        restart: on-failure
         ports:
             - "3000:3000"
         volumes:
@@ -14,6 +19,7 @@ services:
             - webappnetwork
     server:
         image: webapp-server
+        build: ./millamoolah_server
         restart: always
         ports:
             - "9000:9000"
@@ -26,13 +32,13 @@ services:
             - webappnetwork
     mongodb:
         image: mongo
-        restart: always
         container_name: mongodb
-        volumes:
-            - ./data-node:/data/db
+        restart: always
+        environment:
+            MONGO_INITDB_ROOT_USERNAME: root
+            MONGO_INITDB_ROOT_PASSWORD: password
         ports:
             - 27017:27017
-        command: mongod --noauth --smallfiles
         networks:
             - webappnetwork
 networks:
