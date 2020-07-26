@@ -32,3 +32,12 @@ Note that we do not have any docker volumes to persist our database data. This i
 > The default Docker setup on Windows and OS X uses a VirtualBox VM to host the Docker daemon. Unfortunately, the mechanism VirtualBox uses to share folders between the host system and the Docker container is not compatible with the memory mapped files used by MongoDB (see vbox bug, docs.mongodb.org and related jira.mongodb.org bug). This means that it is not possible to run a MongoDB container with the data directory mapped to the host.
 
 Hence, we will reinstantiate the database constantly, and run a script on start of development that populates it with fake data. 
+
+## Database Design - Using MongoDB
+as there are no joins in NoSQL databases, there will be some copying of data. 
+
+
+## Seeding The Database
+
+
+## API design - Express

@@ -5,7 +5,6 @@ services:
         build: 
             context: ./millamoolah_client
             dockerfile: Dockerfile
-        stdin_open: true
         tty: true      
         restart: on-failure
         ports:
@@ -33,6 +32,8 @@ services:
     mongodb:
         image: mongo
         container_name: mongodb
+        stdin_open: true
+        tty: true      
         restart: always
         environment:
             MONGO_INITDB_ROOT_USERNAME: root
