@@ -32,16 +32,15 @@ services:
     mongodb:
         image: mongo
         container_name: mongodb
-        stdin_open: true
-        tty: true      
         restart: always
-        environment:
-            MONGO_INITDB_ROOT_USERNAME: root
-            MONGO_INITDB_ROOT_PASSWORD: password
         ports:
             - 27017:27017
         networks:
             - webappnetwork
+    mongo-seed:
+        build: ./seed
+        links:
+            - mongodb
 networks:
     webappnetwork:
         driver: bridge

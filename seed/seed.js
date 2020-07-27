@@ -16,6 +16,7 @@ const CURRENT_DATE = new Date(Date.now());
 
 const ALL_INCOME = [];
 const ALL_EXPENSE = [];
+let ALL_USERS = [];
 
 //we create 3 users who have been with us for 3 months, 6 months and 9 months respectively.
 function seed() {
@@ -27,11 +28,13 @@ function seed() {
 
   const users = USER_PARAMS.map((startDate) => createUser(startDate));
 
-  return {
-    users: users,
-    income: ALL_INCOME,
-    expense: ALL_EXPENSE,
-  };
+  ALL_USERS = ALL_USERS.concat(users)
+
+//   return {
+//     users: users,
+//     income: ALL_INCOME,
+//     expense: ALL_EXPENSE,
+//   };
 }
 
 function createUser(startDate) {
@@ -277,4 +280,10 @@ function getMonthlyOverview(user_id) {
 
 // }
 
-fs.writeFileSync("seed_data.json", JSON.stringify(seed()));
+
+seed();
+fs.writeFileSync("seeddata_users.json", JSON.stringify(ALL_USERS));
+fs.writeFileSync("seeddata_expense.json", JSON.stringify(ALL_EXPENSE));
+fs.writeFileSync("seeddata_income.json", JSON.stringify(ALL_INCOME));
+
+
