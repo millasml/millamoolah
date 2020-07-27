@@ -41,6 +41,8 @@ services:
         build: ./seed
         links:
             - mongodb
+        networks:
+            - webappnetwork
 networks:
     webappnetwork:
         driver: bridge
