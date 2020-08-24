@@ -1,17 +1,15 @@
 version: "2"
 services:
     client:
-        image: webapp-client
         build: 
             context: ./millamoolah_client
-            dockerfile: Dockerfile
+            dockerfile: Dockerfile.prod
         tty: true      
         restart: on-failure
         ports:
-            - "3000:3000"
+            - "3000:80"
         volumes:
-            - ./client:/client
-            - /client/node_modules
+            - ./millamoolah_client/src:/client/src
         links:
             - server
         networks:
@@ -20,11 +18,9 @@ services:
         image: webapp-server
         build: ./millamoolah_server
         restart: always
-        ports:
-            - "9000:9000"
+        expose: [9000]
         volumes:
-            - ./server:/server
-            - /server/node_modules
+            - ./millamoolah_server:/server
         depends_on:
             - mongodb
         networks:
