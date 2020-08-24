@@ -1,7 +1,6 @@
 const faker = require("faker");
 const fs = require("fs");
 const moment = require("moment");
-const { start } = require("repl");
 
 const EXPENSE_CATEGORIES = [
   "Dining",
@@ -62,7 +61,7 @@ function createUser(startDate) {
     goals: goals,
     recurring_expenses: recurringExpenses,
     recurring_incomes: recurringIncomes,
-    monthy_overview: monthlyOverview,
+    monthly_overview: monthlyOverview,
   };
 }
 
@@ -148,7 +147,7 @@ function createRecurringExpensesEntries(recurringExpenses, _id) {
       ALL_EXPENSE.push({
         date: date,
         item: entry.item,
-        amount: entry.monthly_amount,
+        amount: parseFloat(entry.monthly_amount),
         category: entry.category,
         user_id: _id,
       });
@@ -192,7 +191,7 @@ function createExpenseEntries(user_id, startDate) {
       ALL_EXPENSE.push({
         date: faker.date.between(startDate, CURRENT_DATE),
         item: faker.company.companyName(),
-        amount: faker.finance.amount(),
+        amount: parseFloat(faker.finance.amount()),
         category: category,
         user_id: user_id,
       });
