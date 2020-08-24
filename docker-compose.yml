@@ -8,8 +8,6 @@ services:
         restart: on-failure
         ports:
             - "80:80"
-        volumes:
-            - ./millamoolah_client/src:/client/src
         links:
             - server
         networks:
@@ -19,8 +17,6 @@ services:
         build: ./millamoolah_server
         restart: always
         expose: [9000]
-        volumes:
-            - ./millamoolah_server:/server
         depends_on:
             - mongodb
         networks:
