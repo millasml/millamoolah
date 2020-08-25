@@ -2,7 +2,9 @@
 
 ## What is This?
 
-This is a MERN application, 
+MERN web application for personal finances. Made with Redux, and Firebase Auth (JWT), deployed on AWS using Docker.
+
+See the website [here](https://www.millamoolah.com) The details are not complete, but the set up is done.
 
 ## Cloning the repository
 We are using submodules to store the client and server in separate repositories. Hence, to clone the entire project, run the following command
@@ -34,29 +36,35 @@ Note that we do not have any docker volumes to persist our database data. This i
 Hence, we will reinstantiate the database constantly, and run a script on start of development that populates it with fake data. 
 
 ## Database Design - Using MongoDB
-as there are no joins in NoSQL databases, there will be some copying of data. 
+as there are no joins in NoSQL databases, there will be some copying of data. This is the schema that has been settled upon
 
+![database design](./database_design.png)
 
-## Seeding The Database
-Created some seed data, and we initialize a database with that seed data everytime on start up
+We expect high volumes of transactions (expense and income), which is why we list each of them as separate documents in the expense / income collections. These documents have a user_id tied to it, which is how we will query a particular user's transactions.
+
+For the user data, we include monthly summaries each month that is updated with each transaction. This makes querying for month on month data easier and faster, as the calculations are done on the fly rather than all at once.
+
+Recurring expenses and incomes are recorded for each user, and this data will be used to create transactions at the start of every month using a cron job.
+
+### Seeding The Database
+We have created some seed data using faker.js, and we initialize a database with that seed data everytime on start up. We add 3 users - on the platform for 3, 6 and 9 months respectively.
 
 
 ## JWT Authentication
-Using google firebase authentication
-https://firebase.google.com/docs?authuser=0
+Using google firebase authentication, we genearte JWT tokens that are used to authenticate each request to the end point. The JWT Token that we get upon authorization is stored in the sessionStorage.
+
+Here are a list of resources that have helped me understand this concept.
+* https://firebase.google.com/docs?authuser=0
+* https://jwt.io/introduction/
+* https://auth0.com/blog/refresh-tokens-what-are-they-and-when-to-use-them/
+* https://medium.com/@rajaraodv/securing-react-redux-apps-with-jwt-tokens-fcfe81356ea0#:~:text=Storing%20JWT%20Token&text=We%20can%20store%20it%20as,ll%20store%20it%20in%20sessionStorage.&text=%2F%2Fpersisted%20across%20tabs%20and%20new%20windows.
 
 
-https://jwt.io/introduction/
-https://auth0.com/blog/refresh-tokens-what-are-they-and-when-to-use-them/
-https://medium.com/@rajaraodv/securing-react-redux-apps-with-jwt-tokens-fcfe81356ea0#:~:text=Storing%20JWT%20Token&text=We%20can%20store%20it%20as,ll%20store%20it%20in%20sessionStorage.&text=%2F%2Fpersisted%20across%20tabs%20and%20new%20windows.
-
-store jwt token in session storage
-
-use firebase admin sdk to check token in the express API
-
-pros - do not store passwords in the database, firebase does all the salt and hash
+We do this because we do not want to store passwords in the database. We have to add a salt and hash. In the consideration of time, we use the Firebase Authentication service.
 
 ## API design - Express
+
+Here's a good resource to get started:
 https://developer.mozilla.org/en-US/docs/Learn/Server-side/First_steps
 
 ### The Middleware
@@ -70,13 +78,51 @@ You can add a middleware function to the processing chain with either app.use() 
 https://expressjs.com/en/guide/using-middleware.html
 middleware function with no mount path - The function is executed every time the app receives a request
 
+### Mongoose
+We are using Mongoose for object modelling and data validation. All models are stored in the /models directory
+
+### Firebase Auth Middleware
+```
+function checkAuth(req, res, next) {
+  if (req.headers.authorization) {
+    admin.auth().verifyIdToken(req.headers.authorization.split(" ")[1])
+      .then((claims) => {
+        console.log("authorized", claims.uid)
+        req.uid = claims.uid
+        next()
+      }).catch(() => {
+        res.status(403).send('Unauthorized')
+      });
+  } else {
+    res.status(403).send('Unauthorized')
+  }
+}
+
+app.use(checkAuth)
+```
+We create the checkAuth middleware so that every single request goes through the authorization check.
 
 
 ## React Redux
-slices
+Redux is a predictable state contianer. We are using this to store and database data, or any preliminary data that is to be used before being sent to the database.
+
+To organize the reducer logic, we use slices. This allows us to create multiple separate reducers, before merging them into one root reducer.
+
+More inf here: https://redux.js.org/recipes/structuring-reducers/splitting-reducer-logic
+
+We use `createSlice`, which us function that accepts an initial state, an object full of reducer functions, and a "slice name", and automatically generates action creators and action types that correspond to the reducers and state.
+
+## NGINX
+Ideally, we would want to run the database, server and client on different instances. However, due to cost issues, we are going to run them all on the same instance. Hence, we need to use ngnix as a proxy to the server.
+
+## AWS
+The application is running on an EC2 instance, using docker.
+
+## Cloudfare
+Cloudfare provides free ssl/tls as well as DNS managemenet. We are using it to protect our website with https.
 
 
-## Possible tech to incorporate
+## Possible extensions
 * socket.io
 * microservice architectures
 * server side caching
