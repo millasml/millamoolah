@@ -2,9 +2,19 @@
 
 ## What is This?
 
+![Landing Page](./landing.gif)
+
 MERN web application for personal finances. Made with Redux, and Firebase Auth (JWT), deployed on AWS using Docker.
 
 See the website [here](https://www.millamoolah.com) The details are not complete, but the set up is done.
+
+### Features
+
+#### Informative Overviews
+![Home Page](./home.gif)
+
+#### Fast and Easy Data Entry
+![Add Page](./add.gif)
 
 ## Cloning the repository
 We are using submodules to store the client and server in separate repositories. Hence, to clone the entire project, run the following command
@@ -36,11 +46,13 @@ Note that we do not have any docker volumes to persist our database data. This i
 Hence, we will reinstantiate the database constantly, and run a script on start of development that populates it with fake data. 
 
 ## Database Design - Using MongoDB
-as there are no joins in NoSQL databases, there will be some copying of data. This is the schema that has been settled upon
+The database will contain three collections - one for users, one for spending and one for income.
 
-![database design](./database_design.png)
+as there are no joins in NoSQL databases, there will be some copying of data. This is the schema that has been settled upon.
 
-We expect high volumes of transactions (expense and income), which is why we list each of them as separate documents in the expense / income collections. These documents have a user_id tied to it, which is how we will query a particular user's transactions.
+![database design](./database.png)
+
+We expect high volumes of transactions (spending and income), which is why we list each of them as separate documents in the expense / income collections. These documents have a user_id tied to it, which is how we will query a particular user's transactions.
 
 For the user data, we include monthly summaries each month that is updated with each transaction. This makes querying for month on month data easier and faster, as the calculations are done on the fly rather than all at once.
 
@@ -108,7 +120,7 @@ Redux is a predictable state contianer. We are using this to store and database 
 
 To organize the reducer logic, we use slices. This allows us to create multiple separate reducers, before merging them into one root reducer.
 
-More inf here: https://redux.js.org/recipes/structuring-reducers/splitting-reducer-logic
+More inf0 here: https://redux.js.org/recipes/structuring-reducers/splitting-reducer-logic
 
 We use `createSlice`, which us function that accepts an initial state, an object full of reducer functions, and a "slice name", and automatically generates action creators and action types that correspond to the reducers and state.
 
