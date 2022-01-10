@@ -1,6 +1,6 @@
 # millamoolah
 
-> I have decided to stop hosting millamoolah on a custom domain indefinitely. If you would like to visit the site, you can go to the address in the description of this github repo. Thank you!
+> I have decided to stop hosting millamoolah on a custom domain indefinitely. Thank you for your support!
 
 ## What is This?
 
